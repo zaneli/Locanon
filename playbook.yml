@@ -1,0 +1,29 @@
+---
+- hosts: locanon
+  user: vagrant
+  sudo: yes
+  vars:
+    username: vagrant
+    ohmyzsh_install_script: /tmp/install.ohmyz.sh
+  tasks:
+    - name: install rpm packages
+      command: rpm -i http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
+      ignore_errors: true
+    - name: install yum packages
+      yum: name={{item}} state=present
+      with_items:
+        - git
+        - git-core
+        - zsh
+        - vim
+        - tig
+        - tmux
+    - name: change default shell
+      user: name={{username}} shell=/bin/zsh
+    - name: download oh-my-zsh
+      get_url: url="http://install.ohmyz.sh" dest={{ohmyzsh_install_script}} mode=0555
+    - name: replace oh-my-zsh install script file
+      command: sed -i -e 's/env\ zsh//' -e 's/\.\ \~\/\.zshrc//' {{ohmyzsh_install_script}}
+    - name: install oh-my-zsh
+      shell: sudo -su {{username}} {{ohmyzsh_install_script}}
+

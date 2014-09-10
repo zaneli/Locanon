@@ -1,3 +1,5 @@
+#! /usr/bin/env sh
+
 echo '[start] vagrant init'
 
 vagrant init chef/centos-6.5

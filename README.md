@@ -10,7 +10,7 @@ Local development environment automatic setting
 
 ## Getting Started
 
-### 1. Run init.sh
+### 1. Execute init.sh
 
 ### 2. Copy SSH public key to guest.
 
@@ -37,5 +37,10 @@ or
     "changed": false,
     "ping": "pong"
 }
+```
+### 4. Execute Ansible PlayBook
+
+```
+> ansible-playbook playbook.yml -i hosts
 ```
 
