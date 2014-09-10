@@ -6,9 +6,13 @@
     username: vagrant
     ohmyzsh_install_script: /tmp/install.ohmyz.sh
   tasks:
-    - name: install rpm packages
+    - name: check tig installed
+      command: rpm -q tig
+      register: tig_installed
+      failed_when: tig_installed.rc not in [0, 1]
+    - name: install rpm package for tig
       command: rpm -i http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
-      ignore_errors: true
+      when: tig_installed|failed
     - name: install yum packages
       yum: name={{item}} state=present
       with_items:
@@ -22,8 +26,11 @@
       user: name={{username}} shell=/bin/zsh
     - name: download oh-my-zsh
       get_url: url="http://install.ohmyz.sh" dest={{ohmyzsh_install_script}} mode=0555
+      notify: replace oh-my-zsh install script file
+
+  handlers:
     - name: replace oh-my-zsh install script file
       command: sed -i -e 's/env\ zsh//' -e 's/\.\ \~\/\.zshrc//' {{ohmyzsh_install_script}}
+      notify: install oh-my-zsh
     - name: install oh-my-zsh
       shell: sudo -su {{username}} {{ohmyzsh_install_script}}
-
