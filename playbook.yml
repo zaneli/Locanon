@@ -4,6 +4,7 @@
   sudo: yes
   vars:
     username: vagrant
+    groupname: vagrant
     homedir: /home/{{username}}
     ohmyzsh_install_script: /tmp/install.ohmyz.sh
   tasks:
@@ -29,20 +30,31 @@
     - name: download oh-my-zsh
       get_url: url="http://install.ohmyz.sh" dest={{ohmyzsh_install_script}} mode=0555
       notify: replace oh-my-zsh install script file
+      sudo: no
     - name: copy dot files
       copy: src=./dotfiles/{{item}} dest={{homedir}}/{{item}}
       with_items:
         - .gitconfig
         - .gitignore_global
         - .vimrc
+      sudo: no
+    - name: change .vim dir owner
+      file: path={{homedir}}/.vim owner={{username}} group={{groupname}} state=directory mode=0755
+    - name: make NeoBundle dir
+      file: path={{homedir}}/.vim/bundle state=directory mode=0755
+      sudo: no
+      notify: install NeoBundle
 
   handlers:
     - name: replace oh-my-zsh install script file
       command: sed -i -e 's/env\ zsh//' -e 's/\.\ \~\/\.zshrc//' {{ohmyzsh_install_script}}
       notify: install oh-my-zsh
     - name: install oh-my-zsh
-      shell: sudo -su {{username}} {{ohmyzsh_install_script}}
+      shell: sh {{ohmyzsh_install_script}}
+      sudo: no
       notify: add hostname to prompt
     - name: add hostname to prompt
-      command: sed -i '$a\export PROMPT="%{$fg_bold[blue]%}[{{inventory_hostname}}] $PROMPT"\n' {{homedir}}/.zshrc
-
+      shell: echo 'export PROMPT="%{$fg_bold[blue]%}[{{inventory_hostname}}] $PROMPT"' >> {{homedir}}/.zshrc
+    - name: install NeoBundle
+      git: repo=git://github.com/Shougo/neobundle.vim dest={{homedir}}/.vim/bundle/neobundle.vim
+      sudo: no
