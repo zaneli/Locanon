@@ -42,4 +42,7 @@
       notify: install oh-my-zsh
     - name: install oh-my-zsh
       shell: sudo -su {{username}} {{ohmyzsh_install_script}}
+      notify: add hostname to prompt
+    - name: add hostname to prompt
+      command: sed -i '$a\export PROMPT="%{$fg_bold[blue]%}[{{inventory_hostname}}] $PROMPT"\n' {{homedir}}/.zshrc
 
