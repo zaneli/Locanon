@@ -1,0 +1,25 @@
+[user]
+  name = zaneli
+  email = shun.otani@gmail.com
+[core]
+  excludesfile = ~/.gitignore_global
+  precomposeunicode = true # UTF8-MAC問題回避
+  quotepath = false
+[color]
+  ui = auto
+[alias]
+  br = branch
+  co = checkout
+  ci = commit
+  st = status
+  df = diff
+  logall = log --oneline --graph --decorate --all
+[pull]
+  rebase = true
+[diff]
+  external = git_diff_wrapper
+[pager]
+  diff =
+[tig "bind"]
+  generic = g move-first-line
+  generic = G move-last-line

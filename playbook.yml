@@ -4,6 +4,7 @@
   sudo: yes
   vars:
     username: vagrant
+    homedir: /home/{{username}}
     ohmyzsh_install_script: /tmp/install.ohmyz.sh
   tasks:
     - name: check tig installed
@@ -16,6 +17,7 @@
     - name: install yum packages
       yum: name={{item}} state=present
       with_items:
+        - libselinux-python
         - git
         - git-core
         - zsh
@@ -27,6 +29,12 @@
     - name: download oh-my-zsh
       get_url: url="http://install.ohmyz.sh" dest={{ohmyzsh_install_script}} mode=0555
       notify: replace oh-my-zsh install script file
+    - name: copy dot files
+      copy: src=./dotfiles/{{item}} dest={{homedir}}/{{item}}
+      with_items:
+        - .gitconfig
+        - .gitignore_global
+        - .vimrc
 
   handlers:
     - name: replace oh-my-zsh install script file
@@ -34,3 +42,4 @@
       notify: install oh-my-zsh
     - name: install oh-my-zsh
       shell: sudo -su {{username}} {{ohmyzsh_install_script}}
+
