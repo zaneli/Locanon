@@ -6,7 +6,6 @@
     username: vagrant
     groupname: vagrant
     homedir: /home/{{username}}
-    ohmyzsh_install_script: /tmp/install.ohmyz.sh
   tasks:
     - name: check tig installed
       command: rpm -q tig
@@ -27,10 +26,10 @@
         - tmux
     - name: change default shell
       user: name={{username}} shell=/bin/zsh
-    - name: download oh-my-zsh
-      get_url: url="http://install.ohmyz.sh" dest={{ohmyzsh_install_script}} mode=0555
-      notify: replace oh-my-zsh install script file
+    - name: install oh-my-zsh
+      git: repo=git://github.com/robbyrussell/oh-my-zsh dest={{homedir}}/.oh-my-zsh
       sudo: no
+      notify: copy .zshrc
     - name: copy dot files
       copy: src=./dotfiles/{{item}} dest={{homedir}}/{{item}}
       with_items:
@@ -46,11 +45,8 @@
       notify: install NeoBundle
 
   handlers:
-    - name: replace oh-my-zsh install script file
-      command: sed -i -e 's/env\ zsh//' -e 's/\.\ \~\/\.zshrc//' {{ohmyzsh_install_script}}
-      notify: install oh-my-zsh
-    - name: install oh-my-zsh
-      shell: sh {{ohmyzsh_install_script}}
+    - name: copy .zshrc
+      command: cp {{homedir}}/.oh-my-zsh/templates/zshrc.zsh-template {{homedir}}/.zshrc
       sudo: no
       notify: add hostname to prompt
     - name: add hostname to prompt
