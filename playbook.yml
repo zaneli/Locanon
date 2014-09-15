@@ -55,5 +55,7 @@
     - name: install NeoBundle
       git: repo=git://github.com/Shougo/neobundle.vim dest=~/.vim/bundle/neobundle.vim
     - name: install Golang
-      shell: tar zxf /tmp/go{{golang_version}}.tar.gz -C ~; echo 'export GOROOT=~/go' >> ~/.zshrc; echo 'export GOPATH=$GOROOT/packages' >> ~/.zshrc; echo 'export PATH=$PATH:$GOROOT/bin' >> ~/.zshrc
-
+      shell: tar zxf /tmp/go{{golang_version}}.tar.gz -C ~; echo 'export GOROOT=~/go' >> ~/.zshrc; echo 'export GOPATH=$GOROOT/packages' >> ~/.zshrc; echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> ~/.zshrc
+      notify: install peco
+    - name: install peco
+      shell: source ~/.zshrc; go get github.com/lestrrat/peco/cmd/peco/; cat /vagrant/dotfiles/.zshrc.peco >> ~/.zshrc;
