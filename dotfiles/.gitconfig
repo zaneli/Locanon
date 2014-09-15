@@ -5,6 +5,8 @@
   excludesfile = ~/.gitignore_global
   precomposeunicode = true # UTF8-MAC問題回避
   quotepath = false
+[init]
+  templatedir = ~/.git_template/
 [color]
   ui = auto
 [alias]

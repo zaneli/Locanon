@@ -30,12 +30,19 @@
       git: repo=git://github.com/robbyrussell/oh-my-zsh dest={{homedir}}/.oh-my-zsh
       sudo: no
       notify: copy .zshrc
+    - name: make git template directory
+      file: path=~/.git_template/hooks state=directory recurse=yes
+      sudo: no
     - name: copy dot files
       copy: src=./dotfiles/{{item}} dest={{homedir}}/{{item}}
       with_items:
         - .gitconfig
         - .gitignore_global
+        - .git_template/hooks/pre-push
         - .vimrc
+      sudo: no
+    - name: change git hook script mode
+      file: path=~/.git_template/hooks/pre-push mode=0755
       sudo: no
     - name: change .vim dir owner
       file: path={{homedir}}/.vim owner={{username}} group={{groupname}} state=directory mode=0755
