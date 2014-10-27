@@ -46,6 +46,7 @@
       copy: src=files/dotfiles/.vim/rc/{{item}} dest=~/.vim/rc/{{item}}
       with_items:
         - .vimrc.basic
+        - .vimrc.golang
         - .vimrc.plugins
     - name: copy bin files
       copy: src=files/bin/{{item}} dest=/usr/bin/{{item}} mode=0755

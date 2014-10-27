@@ -1,3 +1,6 @@
+" Golangの設定
+source ~/.vim/rc/.vimrc.golang
+
 " プラグインの設定
 source ~/.vim/rc/.vimrc.plugins
 
