@@ -14,6 +14,8 @@
       command: rpm -i http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
       sudo: yes
       when: tig_installed|failed
+      register: tigrpm_install
+      failed_when: tigrpm_install.rc not in [0, 1]
     - name: install yum packages
       yum: name={{item}} state=present
       with_items:
