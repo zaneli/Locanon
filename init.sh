@@ -2,7 +2,7 @@
 
 echo '[start] vagrant init'
 
-vagrant init chef/centos-6.5
+vagrant init chef/centos-7.0
 
 echo '[ end ] vagrant init'
 
