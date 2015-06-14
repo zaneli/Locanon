@@ -40,6 +40,7 @@
       with_items:
         - .gitconfig
         - .gitignore_global
+        - .git_template/hooks/pre-commit
         - .git_template/hooks/pre-push
         - .vimrc
     - name: make vimrc dir
